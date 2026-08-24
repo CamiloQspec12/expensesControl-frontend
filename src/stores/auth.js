@@ -1,12 +1,14 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
-export const auth = defineStore('auth', () => {
+import api from '@/services/api'
+import { ref } from 'vue'
+
+export const useAuthStore = defineStore('auth', () => {
   const token = ref('')
   const user = ref([])
 
   async function login(email, password) {
     try {
-      const response = await axios.post('/login', {
+      const response = await api.post('/login', {
         email: email,
         password: password,
       })

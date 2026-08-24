@@ -1,12 +1,20 @@
-<script setup></script>
+<script setup>
+import { computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const reactiveRoute = computed(() => {
+  return route.path
+})
+</script>
 
 <template>
-  <section class="bg-black">
-    <h1>You did it!</h1>
-    <p>
-      Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-      documentation
-    </p>
+  <section class="main-wrapp h-dvh flex flex-col">
+    <header v-if="reactiveRoute != '/login'" class="h-15">Esto es un header</header>
+    <div class="second-wrapp flex-1 overflow-y-auto">
+      <RouterView></RouterView>
+    </div>
   </section>
 </template>
 
