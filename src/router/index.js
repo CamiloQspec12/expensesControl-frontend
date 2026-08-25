@@ -1,3 +1,4 @@
+import Dashboard from '@/views/dashboard.vue'
 import LoginView from '@/views/loginView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -6,13 +7,25 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: LoginView,
+      redirect: '/login',
     },
     {
       path: '/login',
       component: LoginView,
     },
+    {
+      path: '/dashboard',
+      component: Dashboard,
+      meta: { requiresAuth: true },
+    },
   ],
+})
+
+router.beforeEach((to) => {
+  const token = localStorage.getItem('token')
+  if (to.meta.requiresAuth && !token) return '/login'
+  console.log(to)
+  if (to.path === '/login' && token) return '/dashboard'
 })
 
 export default router

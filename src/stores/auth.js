@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
         password: password,
       })
       token.value = response.data.token
-      localStorage.setItem('token', token)
+      localStorage.setItem('token', token.value)
     } catch (e) {
       console.log(e)
     }
