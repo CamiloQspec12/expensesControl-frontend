@@ -1,18 +1,11 @@
 <script setup>
-import { computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-
-const reactiveRoute = computed(() => {
-  return route.path
-})
+import NavHeader from './components/navHeader.vue'
 </script>
 
 <template>
-  <section class="main-wrapp h-dvh flex flex-col">
-    <header v-if="reactiveRoute !== '/login'" class="h-15">Esto es un header</header>
-    <div class="second-wrapp flex-1 overflow-y-auto">
+  <section class="main-wrapp bg-gray-50 h-dvh flex flex-col">
+    <NavHeader></NavHeader>
+    <div class="second-wrapp flex-1 p-2 overflow-y-auto">
       <RouterView></RouterView>
     </div>
   </section>
