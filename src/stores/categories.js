@@ -17,14 +17,15 @@ export const useCategoriesStore = defineStore('categories', () => {
 
   async function createCategories(name, category) {
     try {
-      const response = await api.post('/categories', {
+      await api.post('/categories', {
         name: name,
         category: category,
       })
+      await fetchCategories()
     } catch (e) {
       console.log(e)
     }
   }
 
-  return { fetchCategories, categories }
+  return { fetchCategories, categories, createCategories }
 })

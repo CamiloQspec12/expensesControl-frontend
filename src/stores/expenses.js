@@ -9,7 +9,6 @@ export const useExpensesStore = defineStore('expenses', () => {
     try {
       const response = await api.get('/expenses')
       expenses.value = response.data
-      console.log(expenses)
     } catch (e) {
       expenses.value = []
       console.log(e, 'Errror fetching the data')
@@ -18,7 +17,7 @@ export const useExpensesStore = defineStore('expenses', () => {
 
   async function createExpense(type, value, categoryId) {
     try {
-      const response = await api.post('/expenses', {
+      await api.post('/expenses', {
         type: type,
         value: value,
         categoryId: categoryId,

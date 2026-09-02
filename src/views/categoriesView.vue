@@ -11,8 +11,10 @@ onMounted(() => {
   categoriesStore.fetchCategories()
 })
 
-function handleCategory() {
-  console.log(category.value)
+async function handleCategory() {
+  await categoriesStore.createCategories(name.value, category.value)
+  name.value = ''
+  category.value = ''
 }
 </script>
 
@@ -23,7 +25,7 @@ function handleCategory() {
       <div class="flex w-full">
         <div class="flex-auto">
           <p class="text-gray-900 font-medium text-lg mb-2">Crear Categoria</p>
-          <form action="" class="flex flex-col max-w-sm" @submit.prevent="handleCategory">
+          <form class="flex flex-col max-w-sm" @submit.prevent="handleCategory">
             <input
               class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               v-model="name"
