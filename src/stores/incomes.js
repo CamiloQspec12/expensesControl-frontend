@@ -14,11 +14,12 @@ export const useIncomesStore = defineStore('incomes', () => {
     }
   }
 
-  async function createIncomes(quantity, frecuency) {
+  async function createIncomes(quantity, frequency, source) {
     try {
       await api.post('/incomes', {
+        source: source,
         qt: quantity,
-        frecuency: frecuency,
+        frequency: frequency,
       })
       await fetchIncomes()
     } catch (e) {
@@ -26,5 +27,12 @@ export const useIncomesStore = defineStore('incomes', () => {
     }
   }
 
-  return { fetchIncomes, createIncomes, incomes }
+  function formatingCurrency(value) {
+    return new Intl.NumberFormat('en-AU', {
+      style: 'currency',
+      currency: 'AUD',
+    }).format(value)
+  }
+
+  return { fetchIncomes, createIncomes, incomes, formatingCurrency }
 })

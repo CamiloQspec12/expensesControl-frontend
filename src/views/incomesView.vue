@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 
 const incomesStore = useIncomesStore()
 const quantity = ref(0.0)
+const source = ref('')
 const frequency = ref('')
 
 onMounted(() => {
@@ -11,7 +12,10 @@ onMounted(() => {
 })
 
 async function handleIncome() {
-  await incomesStore.createIncomes(quantity.value, frequency.value)
+  await incomesStore.createIncomes(quantity.value, frequency.value, source.value)
+  quantity.value = ''
+  frequency.value = ''
+  source.value = ''
 }
 </script>
 
@@ -24,9 +28,15 @@ async function handleIncome() {
           <p class="text-gray-900 font-medium text-lg mb-2">Crear un ingreso</p>
           <form class="flex flex-col max-w-sm" @submit.prevent="handleIncome">
             <input
+              v-model="source"
+              placeholder="Nombre del ingreso"
+              class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <input
               v-model.number="quantity"
               type="number"
-              class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              step="0.01"
+              class="flex-1 mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <select
               v-model="frequency"
@@ -45,10 +55,11 @@ async function handleIncome() {
           </form>
         </div>
         <div class="flex-auto">
-          <p class="text-gray-900 font-medium text-lg mb-2">Categorias creadas</p>
+          <p class="text-gray-900 font-medium text-lg mb-2">Ingresos</p>
           <ul>
             <li v-for="inc in incomesStore.incomes" :key="inc.id">
-              {{ inc.frequency }} - ${{ inc.qt }}
+              <span class="font-medium text-gray-900 font-bold">{{ inc.source }}</span> -
+              {{ inc.frequency }} - {{ incomesStore.formatingCurrency(inc.qt) }}
             </li>
           </ul>
         </div>
