@@ -10,12 +10,23 @@ onMounted(() => {
   incomesStore.fetchIncomes()
 })
 
+const initialValue = ref({})
+
 const recentExpenses = computed(() => {
   return expensesStores.expenses.slice(0, 5)
 })
 
 const recentIncomes = computed(() => {
   return incomesStore.incomes.slice(0, 5)
+})
+
+const mostUsedCategories = computed(() => {
+  const counts = expensesStores.expenses.reduce((acc, value) => {
+    const name = value.category.name
+    acc[name] = (acc[name] || 0) + 1
+    return acc
+  }, initialValue.value)
+  return Object.entries(counts).sort((a, b) => b[1] - a[1])
 })
 
 function formatDate(dateString) {
@@ -68,9 +79,16 @@ function formatDate(dateString) {
         </div>
       </div>
       <div class="bg-white rounded-lg p-1 ps-2 me-2 mt-3">
-        <p class="text-gray-900 font-medium bg-white rounded-lg p-2 text-xl">
+        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">
           Categorias mas utilizadas
         </p>
+        <div
+          class="flex-auto w-50 bg-white py-1 px-1 mb-2 border border-gray-200 rounded-lg shadow-sm me-1"
+          v-for="[name, count] in mostUsedCategories"
+          :key="name"
+        >
+          {{ name }} - {{ count }}
+        </div>
       </div>
     </div>
   </section>
