@@ -58,8 +58,11 @@ async function handleIncome() {
           <p class="text-gray-900 font-medium text-lg mb-2">Ingresos</p>
           <ul>
             <li v-for="inc in incomesStore.incomes" :key="inc.id">
-              <span class="font-medium text-gray-900 font-bold">{{ inc.source }}</span> -
-              {{ inc.frequency }} - {{ incomesStore.formatingCurrency(inc.qt) }}
+              <span class="font-medium text-gray-500 font-bold">{{ inc.source }}</span> -
+              {{ inc.frequency }} -
+              <span class="text-red-600 font-medium">
+                {{ incomesStore.formatingCurrency(inc.qt) }}
+              </span>
             </li>
           </ul>
         </div>

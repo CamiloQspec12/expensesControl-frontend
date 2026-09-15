@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useExpensesStore } from '../stores/expenses'
 import { useCategoriesStore } from '@/stores/categories'
+import { useIncomesStore } from '@/stores/incomes'
 
 const type = ref('')
 const value = ref(0.0)
@@ -9,6 +10,7 @@ const category = ref()
 
 const expensesStore = useExpensesStore()
 const categoriesStore = useCategoriesStore()
+const incomesStore = useIncomesStore()
 onMounted(() => {
   expensesStore.fetchExpenses()
   categoriesStore.fetchCategories()
@@ -62,7 +64,13 @@ async function handleCreate() {
         <p class="text-gray-900 font-medium text-lg mb-1">Latest Expenses</p>
         <ul>
           <li v-for="expenses in expensesStore.expenses" :key="expenses.id">
-            {{ expenses.type }} - ${{ expenses.value }}
+            {{ expenses.type }} -
+            <span class="text-red-600 font-medium">
+              {{ incomesStore.formatingCurrency(expenses.value) }}</span
+            >
+            <p class="text-gray-500 font-small">
+              {{ expenses.category?.name }}
+            </p>
           </li>
         </ul>
       </div>

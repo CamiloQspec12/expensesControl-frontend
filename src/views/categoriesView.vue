@@ -52,7 +52,9 @@ async function handleCategory() {
         <div class="flex-auto">
           <p class="text-gray-900 font-medium text-lg mb-2">Categorias creadas</p>
           <ul>
-            <li v-for="cat in categoriesStore.categories" :key="cat.id">{{ cat.name }}</li>
+            <li v-for="cat in categoriesStore.categories" :key="cat.id">
+              <span class="text-grey-500 font-medium"> {{ cat.category }} - </span> {{ cat.name }}
+            </li>
           </ul>
         </div>
       </div>
