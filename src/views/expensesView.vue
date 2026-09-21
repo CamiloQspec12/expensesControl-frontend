@@ -7,14 +7,23 @@ import { useIncomesStore } from '@/stores/incomes'
 const type = ref('')
 const value = ref(0.0)
 const category = ref()
+const error = ref({})
 
+//Create instancies
 const expensesStore = useExpensesStore()
 const categoriesStore = useCategoriesStore()
 const incomesStore = useIncomesStore()
+// Create Instancies
 onMounted(() => {
   expensesStore.fetchExpenses()
   categoriesStore.fetchCategories()
 })
+
+function validate(form) {
+  if (!type.value || type.value.trim() === '') {
+    error.value.type = 'Un valor es obligatorio'
+  }
+}
 
 async function handleCreate() {
   await expensesStore.createExpense(type.value, value.value, category.value)
