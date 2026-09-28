@@ -29,7 +29,6 @@ function validate() {
     error.value.type = 'Tipo tiene que tener mas de 3 caracteres'
     console.log('Entra', error.value.type)
   }
-
   if (!value.value || value.value <= 0) {
     error.value.value = 'El valor debe ser mayor a 0'
   }
@@ -44,12 +43,21 @@ function validate() {
 async function handleCreate() {
   if (!validate()) return
 
-  await expensesStore.createExpense(type.value, value.value, category.value)
-  await expensesStore.fetchExpenses()
-
-  type.value = ''
-  value.value = 0.0
-  category.value = 0
+  try {
+    await expensesStore.createExpense(type.value, value.value, category.value)
+    await expensesStore.fetchExpenses()
+    type.value = ''
+    value.value = 0.0
+    category.value = 0
+  } catch (e) {
+    if (!e.response) {
+      error.value.general = 'No se pudo conectar el servidor'
+    } else if (e.response?.status === 400) {
+      error.value.general = e.response.data.message
+    } else {
+      error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
+    }
+  }
 }
 </script>
 
@@ -85,6 +93,9 @@ async function handleCreate() {
           </select>
           <label v-if="error.category" class="text-red-600 text-sm mb-2">
             {{ error.category }}
+          </label>
+          <label v-if="error.general" class="text-red-600 text-sm mb-2">
+            {{ error.general }}
           </label>
           <button
             type="submit pointer"

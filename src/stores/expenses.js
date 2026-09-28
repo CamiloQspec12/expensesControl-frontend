@@ -11,7 +11,7 @@ export const useExpensesStore = defineStore('expenses', () => {
       expenses.value = response.data
     } catch (e) {
       expenses.value = []
-      console.log(e, 'Errror fetching the data')
+      throw e
     }
   }
 
@@ -23,7 +23,7 @@ export const useExpensesStore = defineStore('expenses', () => {
         categoryId: categoryId,
       })
     } catch (e) {
-      console.log(e, 'Error fetching the data')
+      throw e
     }
   }
   return { createExpense, fetchExpenses, expenses }

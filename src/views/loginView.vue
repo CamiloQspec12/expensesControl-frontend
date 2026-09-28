@@ -14,19 +14,30 @@ function validate() {
   if (!email.value || email.value.trim() === '') {
     error.value.email = 'El email es obligatorio'
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-    errors.value.email = 'El email no tiene un formato válido'
+    error.value.email = 'El email no tiene un formato válido'
   }
 
   if (!password.value || password.value.trim() === '') {
     error.value.password = 'La contraseña es obligatoria'
   }
+
+  return Object.keys(error.value).length === 0
+  // Importante si no esta el return devuelve undefined que siempre totea todo
 }
 
 async function handleLogin() {
   if (!validate()) return
 
-  await authStore.login(email.value, password.value)
-  router.push('/dashboard')
+  try {
+    await authStore.login(email.value, password.value)
+    router.push('/dashboard')
+  } catch (e) {
+    if (e.response?.status === 401) {
+      error.value.general = 'Email o contraseña incorrectos'
+    } else {
+      error.value.general = 'Error del servidor, intenta de nuevo más tarde'
+    }
+  }
 }
 </script>
 
@@ -53,9 +64,11 @@ async function handleLogin() {
         <label v-if="error.password" class="text-red-600 text-sm mb-2">
           {{ error.password }}
         </label>
+
+        <span v-if="error.general" class="text-red-600 text-sm mb-2">{{ error.general }}</span>
         <button
           class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
-          type="submit pointer"
+          type="submit"
         >
           Ingresar
         </button>
