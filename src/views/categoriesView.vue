@@ -30,9 +30,20 @@ function validate() {
 
 async function handleCategory() {
   if (!validate()) return
-  await categoriesStore.createCategories(name.value, category.value)
-  name.value = ''
-  category.value = '0'
+
+  try {
+    await categoriesStore.createCategories(name.value, category.value)
+    name.value = ''
+    category.value = '0'
+  } catch (e) {
+    if (!e.response) {
+      error.value.general = 'No se pudo conectar el servidor'
+    } else if (e.response?.status === 400) {
+      error.value.general = e.response.data.message
+    } else {
+      error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
+    }
+  }
 }
 </script>
 
@@ -65,8 +76,11 @@ async function handleCategory() {
             <label v-if="error.category" class="text-red-600 text-sm mb-2">
               {{ error.category }}
             </label>
+            <label v-if="error.general" class="text-red-600 text-sm mb-2">
+              {{ error.general }}
+            </label>
             <button
-              type="submit pointer"
+              type="submit"
               class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
               Crear

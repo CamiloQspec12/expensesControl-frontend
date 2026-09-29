@@ -35,10 +35,20 @@ onMounted(() => {
 async function handleIncome() {
   if (!validate()) return
 
-  await incomesStore.createIncomes(quantity.value, frequency.value, source.value)
-  quantity.value = ''
-  frequency.value = '0'
-  source.value = ''
+  try {
+    await incomesStore.createIncomes(quantity.value, frequency.value, source.value)
+    quantity.value = ''
+    frequency.value = '0'
+    source.value = ''
+  } catch (e) {
+    if (!e.response) {
+      error.value.general = 'No se pudo conectar el servidor'
+    } else if (e.response?.status === 400) {
+      error.value.general = e.response.data.message
+    } else {
+      error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
+    }
+  }
 }
 </script>
 
@@ -77,6 +87,9 @@ async function handleIncome() {
             </select>
             <label v-if="error.frequency" class="text-red-600 text-sm mb-2">
               {{ error.frequency }}
+            </label>
+            <label v-if="error.general" class="text-red-600 text-sm mb-2">
+              {{ error.general }}
             </label>
             <button
               type="submit pointer"

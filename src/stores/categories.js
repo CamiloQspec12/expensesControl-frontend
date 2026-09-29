@@ -23,7 +23,7 @@ export const useCategoriesStore = defineStore('categories', () => {
       })
       await fetchCategories()
     } catch (e) {
-      console.log(e)
+      throw e
     }
   }
 

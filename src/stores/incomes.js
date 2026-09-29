@@ -10,7 +10,7 @@ export const useIncomesStore = defineStore('incomes', () => {
       incomes.value = response.data
     } catch (e) {
       incomes.value = []
-      console.log(e, 'Error Fetching the stores')
+      throw e
     }
   }
 
