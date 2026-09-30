@@ -5,11 +5,18 @@ import { onMounted, ref } from 'vue'
 const name = ref('')
 const category = ref('0')
 const error = ref({})
-
+const isLoading = ref(false)
 const categoriesStore = useCategoriesStore()
 
-onMounted(() => {
-  categoriesStore.fetchCategories()
+onMounted(async () => {
+  isLoading.value = true
+  try {
+    await categoriesStore.fetchCategories()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    isLoading.value = false
+  }
 })
 
 function validate() {
@@ -30,7 +37,7 @@ function validate() {
 
 async function handleCategory() {
   if (!validate()) return
-
+  isLoading.value = true
   try {
     await categoriesStore.createCategories(name.value, category.value)
     name.value = ''
@@ -43,6 +50,8 @@ async function handleCategory() {
     } else {
       error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
     }
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -83,13 +92,16 @@ async function handleCategory() {
               type="submit"
               class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
-              Crear
+              {{ isLoading ? 'Creando' : 'Crear' }}
             </button>
           </form>
         </div>
         <div class="flex-auto">
           <p class="text-gray-900 font-medium text-lg mb-2">Categorias creadas</p>
-          <ul>
+          <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
+            Cargando...
+          </p>
+          <ul v-else>
             <li v-for="cat in categoriesStore.categories" :key="cat.id">
               <span class="text-grey-500 font-medium"> {{ cat.category }} - </span> {{ cat.name }}
             </li>

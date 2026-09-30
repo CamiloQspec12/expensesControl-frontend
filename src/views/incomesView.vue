@@ -7,6 +7,7 @@ const source = ref('')
 const quantity = ref(0.0)
 const frequency = ref('0')
 const error = ref({})
+const isLoading = ref(false)
 
 function validate() {
   error.value = {}
@@ -28,13 +29,21 @@ function validate() {
   return Object.keys(error.value).length === 0
 }
 
-onMounted(() => {
-  incomesStore.fetchIncomes()
+onMounted(async () => {
+  isLoading.value = true
+
+  try {
+    await incomesStore.fetchIncomes()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    isLoading.value = false
+  }
 })
 
 async function handleIncome() {
   if (!validate()) return
-
+  isLoading.value = true
   try {
     await incomesStore.createIncomes(quantity.value, frequency.value, source.value)
     quantity.value = ''
@@ -48,6 +57,8 @@ async function handleIncome() {
     } else {
       error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
     }
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -92,16 +103,20 @@ async function handleIncome() {
               {{ error.general }}
             </label>
             <button
-              type="submit pointer"
+              type="submit"
+              :disabled="isLoading"
               class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
-              Crear
+              {{ isLoading ? ' Creando ' : 'Crear' }}
             </button>
           </form>
         </div>
         <div class="flex-auto bg-white rounded-lg p-2">
           <p class="text-gray-900 font-medium text-lg mb-2">Ingresos</p>
-          <ul>
+          <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
+            Cargando...
+          </p>
+          <ul v-else>
             <li v-for="inc in incomesStore.incomes" :key="inc.id">
               <span class="font-medium text-gray-500 font-bold">{{ inc.source }}</span> -
               {{ inc.frequency }} -

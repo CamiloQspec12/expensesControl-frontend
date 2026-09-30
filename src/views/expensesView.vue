@@ -8,6 +8,7 @@ const type = ref('')
 const value = ref(0.0)
 const category = ref(0)
 const error = ref({})
+const isLoading = ref(false)
 
 //Create instancies
 const expensesStore = useExpensesStore()
@@ -15,9 +16,16 @@ const categoriesStore = useCategoriesStore()
 const incomesStore = useIncomesStore()
 // Create Instancies
 
-onMounted(() => {
-  expensesStore.fetchExpenses()
-  categoriesStore.fetchCategories()
+onMounted(async () => {
+  isLoading.value = true
+  try {
+    await expensesStore.fetchExpenses()
+    await categoriesStore.fetchCategories()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    isLoading.value = false
+  }
 })
 
 function validate() {
@@ -43,6 +51,7 @@ function validate() {
 async function handleCreate() {
   if (!validate()) return
 
+  isLoading.value = true
   try {
     await expensesStore.createExpense(type.value, value.value, category.value)
     await expensesStore.fetchExpenses()
@@ -57,6 +66,8 @@ async function handleCreate() {
     } else {
       error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
     }
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
@@ -100,15 +111,19 @@ async function handleCreate() {
           <button
             type="submit pointer"
             class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
+            :disabled="isLoading"
           >
-            Crear
+            {{ isLoading ? 'Creando' : 'Crear' }}
           </button>
         </form>
         <div class="ms-auto"></div>
       </div>
       <div class="p-2 flex-auto bg-white rounded-lg">
         <p class="text-gray-900 font-medium text-lg mb-1">Latest Expenses</p>
-        <ul>
+        <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
+          Cargando....
+        </p>
+        <ul v-else>
           <li v-for="expenses in expensesStore.expenses" :key="expenses.id">
             {{ expenses.type }} -
             <span class="text-red-600 font-medium">
