@@ -10,8 +10,8 @@ export const useCategoriesStore = defineStore('categories', () => {
       const response = await api.get('/categories')
       categories.value = response.data
     } catch (e) {
-      console.log(e)
       categories.value = []
+      throw e
     }
   }
 

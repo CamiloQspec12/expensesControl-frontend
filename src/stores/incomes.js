@@ -14,7 +14,7 @@ export const useIncomesStore = defineStore('incomes', () => {
     }
   }
 
-  async function createIncomes(quantity, frequency, source) {
+  async function createIncomes(source, quantity, frequency) {
     try {
       await api.post('/incomes', {
         source: source,
@@ -23,7 +23,7 @@ export const useIncomesStore = defineStore('incomes', () => {
       })
       await fetchIncomes()
     } catch (e) {
-      console.log(e, 'Error creating an income')
+      throw e
     }
   }
 

@@ -90,6 +90,7 @@ async function handleCategory() {
             </label>
             <button
               type="submit"
+              :disabled="isLoading"
               class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
               {{ isLoading ? 'Creando' : 'Crear' }}

@@ -45,8 +45,8 @@ async function handleIncome() {
   if (!validate()) return
   isLoading.value = true
   try {
-    await incomesStore.createIncomes(quantity.value, frequency.value, source.value)
-    quantity.value = ''
+    await incomesStore.createIncomes(source.value, quantity.value, frequency.value)
+    quantity.value = '0'
     frequency.value = '0'
     source.value = ''
   } catch (e) {
