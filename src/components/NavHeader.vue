@@ -5,13 +5,14 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const reactiveRoute = computed(() => {
+  console.log(route.path)
   return route.path
 })
 </script>
 
 <template>
   <header
-    v-if="reactiveRoute !== '/login'"
+    v-if="reactiveRoute !== '/login' && reactiveRoute !== '/signUp'"
     class="bg-white border-b border-gray-200 px-6 py-3 flex items-center"
   >
     <div class="text-gray-900 font-medium">

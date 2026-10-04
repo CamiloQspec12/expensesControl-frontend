@@ -72,6 +72,12 @@ async function handleLogin() {
         >
           Ingresar
         </button>
+        <button
+          class="text-gray-900 font-medium text-md mt-2 italic"
+          @click="router.push('/signUp')"
+        >
+          Crear cuenta
+        </button>
       </form>
     </div>
   </div>

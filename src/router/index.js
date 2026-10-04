@@ -3,6 +3,7 @@ import Dashboard from '@/views/dashboard.vue'
 import ExpensesView from '@/views/expensesView.vue'
 import IncomesView from '@/views/incomesView.vue'
 import LoginView from '@/views/loginView.vue'
+import SignUp from '@/views/signUp.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -15,6 +16,10 @@ const router = createRouter({
     {
       path: '/login',
       component: LoginView,
+    },
+    {
+      path: '/signUp',
+      component: SignUp,
     },
     {
       path: '/dashboard',
