@@ -15,6 +15,16 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem('token', token.value)
   }
 
+  async function signUp({ name, email, dob, gender, password }) {
+    const res = await api.post('/signUp', {
+      name,
+      email,
+      dob,
+      gender,
+      password,
+    })
+  }
+
   function logout() {
     token.value = ''
     localStorage.removeItem('token')
@@ -24,5 +34,5 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = localStorage.getItem('token') || ''
   }
 
-  return { token, user, login, logout, loadFromStorage }
+  return { token, user, login, logout, loadFromStorage, signUp }
 })
