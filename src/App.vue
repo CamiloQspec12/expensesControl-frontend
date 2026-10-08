@@ -3,11 +3,11 @@ import NavHeader from './components/NavHeader.vue'
 </script>
 
 <template>
-  <section class="main-wrapp bg-gray-50 h-dvh flex flex-col">
+  <section class="main-wrapp bg-gray-50 md:h-screen flex flex-col">
     <NavHeader></NavHeader>
-    <div class="second-wrapp flex-1 p-2 overflow-y-auto">
+    <main class="flex-1 min-h-0 p-4">
       <RouterView></RouterView>
-    </div>
+    </main>
   </section>
 </template>
 

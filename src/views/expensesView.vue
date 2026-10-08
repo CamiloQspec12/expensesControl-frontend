@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useExpensesStore } from '../stores/expenses'
 import { useCategoriesStore } from '@/stores/categories'
 import { useIncomesStore } from '@/stores/incomes'
+import { Plus } from 'lucide-vue-next'
 
 const type = ref('')
 const value = ref(0.0)
@@ -73,65 +74,85 @@ async function handleCreate() {
 </script>
 
 <template>
-  <section class="text-black h-full">
-    <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 p-2 text-xl">Gastos</p>
-    <div class="flex w-full">
-      <div class="bg-white flex-auto me-2 p-2 rounded-lg mb-3">
-        <div class="text-gray-900 font-medium text-lg mb-2">Crear gasto</div>
-        <form class="flex flex-col max-w-sm" @submit.prevent="handleCreate">
+  <section class="h-full flex flex-col">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">Gastos</h1>
+    <div class="flex flex-col md:flex-row gap-4 flex-1 min-h-0">
+      <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 w-full md:w-1/3">
+        <div class="text-lg font-medium text-gray-900 mb-3">Crear gasto</div>
+        <form class="flex flex-col" @submit.prevent="handleCreate">
           <input
-            class="flex-1 mb-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="flex-1 w-full mb-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             v-model="type"
             placeholder="Tipo"
           />
-          <label v-if="error.type" class="text-red-600 text-sm mb-2"> {{ error.type }} </label>
+          <label
+            v-if="error.type"
+            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-2"
+          >
+            {{ error.type }}
+          </label>
           <input
-            class="flex-1 mb-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="flex-1 w-full mb-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             v-model.number="value"
             placeholder="Valor"
           />
-          <label v-if="error.value" class="text-red-600 text-sm mb-2">
+          <label
+            v-if="error.value"
+            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-2"
+          >
             {{ error.value }}
           </label>
           <select
             v-model.number="category"
-            class="flex-1 mb-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="flex-1 w-full mb-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option disabled value="0">Selecciona una categoría</option>
             <option v-for="c in categoriesStore.categories" :key="c.id" :value="c.id">
               {{ c.name }}
             </option>
           </select>
-          <label v-if="error.category" class="text-red-600 text-sm mb-2">
+          <label
+            v-if="error.category"
+            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-2"
+          >
             {{ error.category }}
           </label>
-          <label v-if="error.general" class="text-red-600 text-sm mb-2">
+          <label
+            v-if="error.general"
+            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-2"
+          >
             {{ error.general }}
           </label>
           <button
             type="submit pointer"
-            class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
+            class="px-4 flex items-center gap-2 leading-none justify-center py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             :disabled="isLoading"
           >
             {{ isLoading ? 'Creando' : 'Crear' }}
+            <Plus class="w-4 h-4 shrink-0 translate-y-px" :stroke-width="2.5" />
           </button>
         </form>
-        <div class="ms-auto"></div>
       </div>
-      <div class="p-2 flex-auto bg-white rounded-lg">
-        <p class="text-gray-900 font-medium text-lg mb-1">Latest Expenses</p>
+      <div class="bg-white rounded-lg shadow-sm flex flex-col min-h-0 p-4 md:p-6 w-full md:w-2/3">
+        <p class="text-lg font-medium text-gray-900 mb-3">Ultimos gastos</p>
         <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
           Cargando....
         </p>
-        <ul v-else>
-          <li v-for="expenses in expensesStore.expenses" :key="expenses.id">
-            {{ expenses.type }} -
+        <ul class="overflow-y-auto flex-1" v-else>
+          <li
+            v-for="expenses in expensesStore.expenses"
+            :key="expenses.id"
+            class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div>
+              <p class="text-gray-900">{{ expenses.type }}</p>
+              <span class="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded-full">{{
+                expenses.category?.name
+              }}</span>
+            </div>
             <span class="text-red-600 font-medium">
-              {{ incomesStore.formatingCurrency(expenses.value) }}</span
-            >
-            <p class="text-gray-500 font-small">
-              {{ expenses.category?.name }}
-            </p>
+              {{ incomesStore.formatingCurrency(expenses.value) }}
+            </span>
           </li>
         </ul>
       </div>
