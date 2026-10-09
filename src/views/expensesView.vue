@@ -85,10 +85,7 @@ async function handleCreate() {
             v-model="type"
             placeholder="Tipo"
           />
-          <label
-            v-if="error.type"
-            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-2"
-          >
+          <label v-if="error.type" class="text-red-600 text-sm">
             {{ error.type }}
           </label>
           <input
@@ -96,10 +93,7 @@ async function handleCreate() {
             v-model.number="value"
             placeholder="Valor"
           />
-          <label
-            v-if="error.value"
-            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-2"
-          >
+          <label v-if="error.value" class="text-red-600 text-sm">
             {{ error.value }}
           </label>
           <select
@@ -111,10 +105,7 @@ async function handleCreate() {
               {{ c.name }}
             </option>
           </select>
-          <label
-            v-if="error.category"
-            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2 mb-2"
-          >
+          <label v-if="error.category" class="text-red-600 text-sm">
             {{ error.category }}
           </label>
           <label

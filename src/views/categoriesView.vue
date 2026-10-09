@@ -57,57 +57,68 @@ async function handleCategory() {
 </script>
 
 <template>
-  <section class="text-black h-full">
-    <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 p-2 text-xl">Categories</p>
-    <div class="bg-white p-2 rounded-lg mb-3">
-      <div class="flex w-full">
-        <div class="flex-auto">
-          <p class="text-gray-900 font-medium text-lg mb-2">Crear Categoria</p>
-          <form class="flex flex-col max-w-sm" @submit.prevent="handleCategory">
-            <input
-              class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              v-model="name"
-              placeholder="Tipo"
-            />
-            <label v-if="error.name" class="text-red-600 text-sm mb-2">
-              {{ error.name }}
-            </label>
-            <select
-              v-model="category"
-              class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option disabled value="0">Selecciona un tipo</option>
-              <option value="FIXED">Fijo</option>
-              <option value="DEBT">Deuda</option>
-              <option value="HORMIGA">Gasto hormiga</option>
-              <option value="OTHER">Otro</option>
-            </select>
-            <label v-if="error.category" class="text-red-600 text-sm mb-2">
-              {{ error.category }}
-            </label>
-            <label v-if="error.general" class="text-red-600 text-sm mb-2">
-              {{ error.general }}
-            </label>
-            <button
-              type="submit"
-              :disabled="isLoading"
-              class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
-            >
-              {{ isLoading ? 'Creando' : 'Crear' }}
-            </button>
-          </form>
-        </div>
-        <div class="flex-auto">
-          <p class="text-gray-900 font-medium text-lg mb-2">Categorias creadas</p>
-          <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
-            Cargando...
-          </p>
-          <ul v-else>
-            <li v-for="cat in categoriesStore.categories" :key="cat.id">
-              <span class="text-grey-500 font-medium"> {{ cat.category }} - </span> {{ cat.name }}
-            </li>
-          </ul>
-        </div>
+  <section class="h-full flex flex-col">
+    <p class="text-2xl font-bold text-gray-900 mb-4">Categories</p>
+    <div class="flex flex-col md:flex-row gap-4 flex-1 min-h-0">
+      <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 w-full md:w-1/3">
+        <p class="text-lg font-medium text-gray-900 mb-3">Crear Categoria</p>
+        <form class="flex flex-col" @submit.prevent="handleCategory">
+          <input
+            class="flex-1 w-full mb-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            v-model="name"
+            placeholder="Tipo"
+          />
+          <label v-if="error.name" class="text-red-600 text-sm">
+            {{ error.name }}
+          </label>
+          <select
+            v-model="category"
+            class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option disabled value="0">Selecciona un tipo</option>
+            <option value="FIXED">Fijo</option>
+            <option value="DEBT">Deuda</option>
+            <option value="HORMIGA">Gasto hormiga</option>
+            <option value="OTHER">Otro</option>
+          </select>
+          <label v-if="error.category" class="text-red-600 text-sm">
+            {{ error.category }}
+          </label>
+          <label
+            v-if="error.general"
+            class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2"
+          >
+            {{ error.general }}
+          </label>
+          <button
+            type="submit"
+            :disabled="isLoading"
+            class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
+          >
+            {{ isLoading ? 'Creando' : 'Crear' }}
+          </button>
+        </form>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm flex flex-col min-h-0 p-4 md:p-6 w-full md:w-2/3">
+        <p class="text-lg font-medium text-gray-900 mb-3">Categorias creadas</p>
+        <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
+          Cargando...
+        </p>
+        <ul class="overflow-y-auto flex-1" v-else>
+          <li
+            v-for="cat in categoriesStore.categories"
+            :key="cat.id"
+            class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div class="flex w-full">
+              <p class="text-gray-900">{{ cat.category }}</p>
+              <span
+                class="text-xs ms-auto font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded-full"
+                >{{ cat.name }}</span
+              >
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
