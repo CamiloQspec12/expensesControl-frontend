@@ -47,90 +47,88 @@ function formatDate(dateString) {
 </script>
 
 <template>
-  <section class="text-black flex h-full">
-    <div class="flex w-full flex-col">
-      <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 p-2 text-xl">Dashboard</p>
-      <div class="flex">
-        <div class="flex-auto bg-white rounded-lg p-1 ps-2 me-2">
-          <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Ultimos Gastos</p>
-          <div
-            class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
-          >
-            <span class="text-gray-900 font-medium"> Total de gastos </span>
-            <span class="text-3xl font-bold text-red-600">
-              {{ totalExpenses ? incomesStore.formatingCurrency(totalExpenses) : 0 }}
-            </span>
-          </div>
-          <div class="flex">
-            <div
-              v-for="ex in recentExpenses"
-              :key="ex.id"
-              class="flex-auto bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-24 me-1"
-            >
-              <p class="text-gray-900 font-medium">
-                {{ ex.type }}
-              </p>
-              <p class="text-gray-500 text-sm">
-                {{ ex.category?.name }}
-              </p>
-              <p class="text-3xl font-bold text-red-600">
-                {{ incomesStore.formatingCurrency(ex.value) }}
-              </p>
-            </div>
-          </div>
+  <div class="flex w-full flex-col">
+    <p class="text-lg font-medium text-gray-900 mb-3">Dashboard</p>
+    <div class="flex">
+      <div class="flex-auto bg-white rounded-lg p-1 ps-2 me-2">
+        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Ultimos Gastos</p>
+        <div
+          class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
+        >
+          <span class="text-gray-900 font-medium"> Total de gastos </span>
+          <span class="text-3xl font-bold text-red-600">
+            {{ totalExpenses ? incomesStore.formatingCurrency(totalExpenses) : 0 }}
+          </span>
         </div>
-        <div class="flex-auto bg-white rounded-lg p-1">
-          <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Total Ingresos</p>
+        <div class="flex">
           <div
-            class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
-          >
-            <span class="text-gray-900 font-medium">
-              Total:
-              <span class="text-3xl font-bold text-red-600">
-                {{ totalIncome ? incomesStore.formatingCurrency(totalIncome) : 0 }}
-              </span>
-            </span>
-          </div>
-          <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Balance</p>
-          <div
-            class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
-          >
-            <span class="text-3xl font-bold text-gray-900">
-              Balance actual:
-              <span :class="`${balance >= 0 ? 'text-green-600' : 'text-red-600'}  font-semibold`">
-                {{ incomesStore.formatingCurrency(balance) }}
-              </span>
-            </span>
-          </div>
-          <!-- <div
-            v-for="inc in recentIncomes"
-            :key="inc.id"
-            class="flex-auto bg-white py-2 px-2 mb-2 border border-gray-200 rounded-xl shadow-sm me-1"
+            v-for="ex in recentExpenses"
+            :key="ex.id"
+            class="flex-auto bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-24 me-1"
           >
             <p class="text-gray-900 font-medium">
-              {{ inc.source }}
+              {{ ex.type }}
             </p>
             <p class="text-gray-500 text-sm">
-              {{ formatDate(inc.createAt) }}
+              {{ ex.category?.name }}
             </p>
-            <p class="text-red-600 font-semibold">
-              {{ incomesStore.formatingCurrency(inc.qt) }}
+            <p class="text-3xl font-bold text-red-600">
+              {{ incomesStore.formatingCurrency(ex.value) }}
             </p>
-          </div> -->
+          </div>
         </div>
       </div>
-      <div class="bg-white rounded-lg p-1 ps-2 me-2 mt-3">
-        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">
-          Categorias mas utilizadas
-        </p>
+      <div class="flex-auto bg-white rounded-lg p-1">
+        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Total Ingresos</p>
         <div
-          class="flex-auto w-50 bg-white py-1 px-1 mb-2 border border-gray-200 rounded-lg shadow-sm me-1"
-          v-for="[name, count] in mostUsedCategories"
-          :key="name"
+          class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
         >
-          {{ name }} - {{ count }}
+          <span class="text-gray-900 font-medium">
+            Total:
+            <span class="text-3xl font-bold text-red-600">
+              {{ totalIncome ? incomesStore.formatingCurrency(totalIncome) : 0 }}
+            </span>
+          </span>
         </div>
+        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Balance</p>
+        <div
+          class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
+        >
+          <span class="text-3xl font-bold text-gray-900">
+            Balance actual:
+            <span :class="`${balance >= 0 ? 'text-green-600' : 'text-red-600'}  font-semibold`">
+              {{ incomesStore.formatingCurrency(balance) }}
+            </span>
+          </span>
+        </div>
+        <!-- <div
+          v-for="inc in recentIncomes"
+          :key="inc.id"
+          class="flex-auto bg-white py-2 px-2 mb-2 border border-gray-200 rounded-xl shadow-sm me-1"
+        >
+          <p class="text-gray-900 font-medium">
+            {{ inc.source }}
+          </p>
+          <p class="text-gray-500 text-sm">
+            {{ formatDate(inc.createAt) }}
+          </p>
+          <p class="text-red-600 font-semibold">
+            {{ incomesStore.formatingCurrency(inc.qt) }}
+          </p>
+        </div> -->
       </div>
     </div>
-  </section>
+    <div class="bg-white rounded-lg p-1 ps-2 me-2 mt-3">
+      <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">
+        Categorias mas utilizadas
+      </p>
+      <div
+        class="flex-auto w-50 bg-white py-1 px-1 mb-2 border border-gray-200 rounded-lg shadow-sm me-1"
+        v-for="[name, count] in mostUsedCategories"
+        :key="name"
+      >
+        {{ name }} - {{ count }}
+      </div>
+    </div>
+  </div>
 </template>
