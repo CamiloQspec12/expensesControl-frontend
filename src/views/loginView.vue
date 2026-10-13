@@ -7,6 +7,7 @@ const authStore = useAuthStore()
 const email = ref('')
 const password = ref('')
 const error = ref({})
+const isLoading = ref(false)
 
 function validate() {
   error.value = {}
@@ -28,6 +29,7 @@ function validate() {
 async function handleLogin() {
   if (!validate()) return
 
+  isLoading.value = true
   try {
     await authStore.login(email.value, password.value)
     router.push('/dashboard')
@@ -37,15 +39,18 @@ async function handleLogin() {
     } else {
       error.value.general = 'Error del servidor, intenta de nuevo más tarde'
     }
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <div class="loginView flex items-center justify-center h-full flex">
-    <div class="w-120 h-120 border-blue-200 rounded bg-blue-50 border-gray-200">
-      <form class="flex items-center h-full flex-col justify-center" @submit.prevent="handleLogin">
-        <p class="mb-3">Login</p>
+  <section class="min-h-[80vh] flex items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-sm p-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-1">Iniciar sesión</h1>
+      <p class="text-sm text-gray-500 mb-4">Ingresa a tu cuenta</p>
+      <form class="flex flex-col gap-3" @submit.prevent="handleLogin">
         <input
           class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           v-model="email"
@@ -64,23 +69,24 @@ async function handleLogin() {
         <label v-if="error.password" class="text-red-600 text-sm mb-2">
           {{ error.password }}
         </label>
-
-        <span v-if="error.general" class="text-red-600 text-sm mb-2">{{ error.general }}</span>
+        <div
+          v-if="error.general"
+          class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2"
+        >
+          {{ error.general }}
+        </div>
         <button
-          class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
           type="submit"
+          :disabled="isLoading"
+          class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Ingresar
-        </button>
-        <button
-          class="text-gray-900 font-medium text-md mt-2 italic"
-          @click="router.push('/signUp')"
-        >
-          Crear cuenta
+          {{ isLoading ? 'Ingresando...' : 'Ingresar' }}
         </button>
       </form>
+      <p class="text-sm text-gray-500 mt-4 text-center">
+        ¿No tienes cuenta?
+        <RouterLink to="/signUp" class="text-blue-600 hover:underline">Regístrate</RouterLink>
+      </p>
     </div>
-  </div>
+  </section>
 </template>
-
-<style scoped></style>

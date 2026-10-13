@@ -47,87 +47,61 @@ function formatDate(dateString) {
 </script>
 
 <template>
-  <div class="flex w-full flex-col">
-    <p class="text-lg font-medium text-gray-900 mb-3">Dashboard</p>
-    <div class="flex">
-      <div class="flex-auto bg-white rounded-lg p-1 ps-2 me-2">
-        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Ultimos Gastos</p>
-        <div
-          class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
-        >
-          <span class="text-gray-900 font-medium"> Total de gastos </span>
-          <span class="text-3xl font-bold text-red-600">
-            {{ totalExpenses ? incomesStore.formatingCurrency(totalExpenses) : 0 }}
-          </span>
-        </div>
-        <div class="flex">
-          <div
-            v-for="ex in recentExpenses"
-            :key="ex.id"
-            class="flex-auto bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-24 me-1"
-          >
-            <p class="text-gray-900 font-medium">
-              {{ ex.type }}
-            </p>
-            <p class="text-gray-500 text-sm">
-              {{ ex.category?.name }}
-            </p>
-            <p class="text-3xl font-bold text-red-600">
-              {{ incomesStore.formatingCurrency(ex.value) }}
-            </p>
-          </div>
-        </div>
+  <div class="h-full overflow-y-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">Dashboard</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <p class="text-sm text-gray-500">Total de gastos</p>
+        <p class="text-2xl font-bold text-red-600 break-words">
+          {{ totalExpenses ? incomesStore.formatingCurrency(totalExpenses) : 0 }}
+        </p>
       </div>
-      <div class="flex-auto bg-white rounded-lg p-1">
-        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Total Ingresos</p>
-        <div
-          class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
-        >
-          <span class="text-gray-900 font-medium">
-            Total:
-            <span class="text-3xl font-bold text-red-600">
-              {{ totalIncome ? incomesStore.formatingCurrency(totalIncome) : 0 }}
-            </span>
-          </span>
-        </div>
-        <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">Balance</p>
-        <div
-          class="flex-auto mb-3 bg-white border border-gray-200 rounded-xl shadow-sm p-2 min-h-12 me-1"
-        >
-          <span class="text-3xl font-bold text-gray-900">
-            Balance actual:
-            <span :class="`${balance >= 0 ? 'text-green-600' : 'text-red-600'}  font-semibold`">
-              {{ incomesStore.formatingCurrency(balance) }}
-            </span>
-          </span>
-        </div>
-        <!-- <div
-          v-for="inc in recentIncomes"
-          :key="inc.id"
-          class="flex-auto bg-white py-2 px-2 mb-2 border border-gray-200 rounded-xl shadow-sm me-1"
-        >
-          <p class="text-gray-900 font-medium">
-            {{ inc.source }}
-          </p>
-          <p class="text-gray-500 text-sm">
-            {{ formatDate(inc.createAt) }}
-          </p>
-          <p class="text-red-600 font-semibold">
-            {{ incomesStore.formatingCurrency(inc.qt) }}
-          </p>
-        </div> -->
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <p class="text-sm text-gray-500">Total de ingresos</p>
+        <p class="text-2xl font-bold text-green-600 break-words">
+          {{ totalIncome ? incomesStore.formatingCurrency(totalIncome) : 0 }}
+        </p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <p class="text-sm text-gray-500">Balance actual</p>
+        <p class="text-2xl font-bold break-words" :class="balance >= 0 ? 'text-green-600' : 'text-red-600'"">
+          {{ incomesStore.formatingCurrency(balance) }}
+        </p>
       </div>
     </div>
-    <div class="bg-white rounded-lg p-1 ps-2 me-2 mt-3">
-      <p class="text-gray-900 font-medium bg-white rounded-lg mb-3 text-xl">
-        Categorias mas utilizadas
-      </p>
-      <div
-        class="flex-auto w-50 bg-white py-1 px-1 mb-2 border border-gray-200 rounded-lg shadow-sm me-1"
-        v-for="[name, count] in mostUsedCategories"
-        :key="name"
-      >
-        {{ name }} - {{ count }}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="bg-white rounded-lg shadow-sm p-4 lg:col-span-2">
+        <h2 class="text-lg font-medium text-gray-900 mb-3">Últimos gastos</h2>
+        <ul>
+          <li
+            v-for="ex in recentExpenses"
+            :key="ex.id"
+            class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div>
+              <p class="text-gray-900">{{ ex.type }}</p>
+              <span class="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                {{ ex.category?.name }}
+              </span>
+            </div>
+            <span class="text-red-600 font-medium">
+              {{ incomesStore.formatingCurrency(ex.value) }}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <h2 class="text-lg font-medium text-gray-900 mb-3">Categorías más utilizadas</h2>
+        <ul>
+          <li
+            v-for="[name, count] in mostUsedCategories"
+            :key="name"
+            class="flex justify-between py-2 border-b border-gray-100"
+          >
+            <span class="text-gray-900"> {{ name }} </span>
+            <span class="text-sm text-gray-500"> {{ count }} </span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

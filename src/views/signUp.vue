@@ -75,11 +75,18 @@ async function handleSignUp() {
 </script>
 
 <template>
-  <section class="h-full flex justify-center items-center">
-    <div class="bg-white rounded w-100 p-2">
-      <p class="text-gray-900 font-medium text-lg mb-2 text-center">Formulario de registro</p>
-      <p v-if="isLoading" class="text-gray-900 font-medium text-lg mb-2 text-center">Cargando...</p>
-      <form v-else class="mx-3" @submit.prevent="handleSignUp">
+  <section class="min-h-[80vh] flex items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-sm p-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-1">Formulario de registro</h1>
+      <form class="flex flex-col gap-3" @submit.prevent="handleSignUp">
+        <!-- inputs con w-full, y bajo cada uno el span de error -->
+
+        <div
+          v-if="error.general"
+          class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2"
+        >
+          {{ error.general }}
+        </div>
         <p class="mt-3">Nombre</p>
         <input
           class="mb-2 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -146,13 +153,11 @@ async function handleSignUp() {
         </label>
         <button
           type="submit"
-          class="px-4 mt-3 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
+          :disabled="isLoading"
+          class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Crear
+          {{ isLoading ? 'Creando...' : 'Crear' }}
         </button>
-        <label v-if="error.general" class="text-red-600 text-sm mb-2">
-          {{ error.general }}
-        </label>
       </form>
     </div>
   </section>
