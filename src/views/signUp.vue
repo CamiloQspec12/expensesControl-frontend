@@ -26,11 +26,13 @@ function validate() {
   }
 
   if (!dob.value) {
-    error.value.dob = 'la fecha de nacimiento es obligatoria'
+    error.value.dob = 'La fecha de nacimiento es obligatoria'
+  } else if (new Date(dob.value) > new Date()) {
+    error.value.dob = 'La fecha de nacimiento no puede ser futura'
   }
 
   if (!gender.value) {
-    error.value.gender = 'El genero es obligatorio'
+    error.value.gender = 'El género es obligatorio'
   }
 
   if (!password.value || password.value.trim().length <= 6) {
@@ -77,80 +79,80 @@ async function handleSignUp() {
 <template>
   <section class="min-h-[80vh] flex items-center justify-center">
     <div class="w-full max-w-md bg-white rounded-lg shadow-sm p-6">
-      <h1 class="text-2xl font-bold text-gray-900 mb-1">Formulario de registro</h1>
+      <h1 class="text-2xl font-bold text-gray-900 mb-4">Formulario de registro</h1>
       <form class="flex flex-col gap-3" @submit.prevent="handleSignUp">
-        <!-- inputs con w-full, y bajo cada uno el span de error -->
-
+        <div class="flex flex-col gap-1">
+          <label for="name" class="text-sm font-medium text-gray-700">Nombre</label>
+          <input
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            id="name"
+            v-model="name"
+            type="text"
+            placeholder="Nombre"
+          />
+          <span v-if="error.name" class="text-red-600 text-sm">
+            {{ error.name }}
+          </span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="email" class="text-sm font-medium text-gray-700">Correo</label>
+          <input
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            id="email"
+            v-model="email"
+            type="email"
+            placeholder="Correo"
+          />
+          <span v-if="error.email" class="text-red-600 text-sm">
+            {{ error.email }}
+          </span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="password" class="text-sm font-medium text-gray-700">Contraseña</label>
+          <input
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            id="password"
+            v-model="password"
+            type="password"
+            placeholder="Contraseña"
+          />
+          <span v-if="error.password" class="text-red-600 text-sm">
+            {{ error.password }}
+          </span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="dob" class="text-sm font-medium text-gray-700">Fecha de nacimiento</label>
+          <input
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            id="dob"
+            v-model="dob"
+            type="date"
+            placeholder="Fecha de nacimiento"
+          />
+          <span v-if="error.dob" class="text-red-600 text-sm">
+            {{ error.dob }}
+          </span>
+        </div>
+        <fieldset class="flex flex-col gap-1">
+          <legend class="text-sm font-medium text-gray-700">Género</legend>
+          <div class="flex items-center gap-4">
+            <label class="flex items-center gap-2 text-gray-700">
+              <input type="radio" v-model="gender" value="masculino" />
+              Masculino
+            </label>
+            <label class="flex items-center gap-2 text-gray-700">
+              <input type="radio" v-model="gender" value="femenino" />
+              Femenino
+            </label>
+          </div>
+          <span v-if="error.gender" class="text-red-600 text-sm">{{ error.gender }}</span>
+        </fieldset>
         <div
           v-if="error.general"
           class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2"
         >
           {{ error.general }}
         </div>
-        <p class="mt-3">Nombre</p>
-        <input
-          class="mb-2 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          v-model="name"
-          type="text"
-          placeholder="Nombre"
-        />
-        <label v-if="error.name" class="text-red-600 text-sm mb-2">
-          {{ error.name }}
-        </label>
-        <p class="mt-3">Contraseña</p>
-        <input
-          class="mb-2 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          v-model="password"
-          type="password"
-          placeholder="Contraseña"
-        />
-        <label v-if="error.password" class="text-red-600 text-sm mb-2">
-          {{ error.password }}
-        </label>
-        <p class="mt-3">Correo</p>
-        <input
-          class="mb-2 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          v-model="email"
-          type="email"
-          placeholder="Correo"
-        />
-        <label v-if="error.email" class="text-red-600 text-sm mb-2">
-          {{ error.email }}
-        </label>
-        <p class="mt-3">Fecha de nacimiento</p>
-        <input
-          class="mb-2 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          v-model="dob"
-          type="date"
-          placeholder="Fecha de nacimiento"
-        />
-        <label v-if="error.dob" class="text-red-600 text-sm mb-2">
-          {{ error.dob }}
-        </label>
-        <p class="mt-2">Genero</p>
-        <div>
-          <input
-            class="mb-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            v-model="gender"
-            id="male"
-            value="masculino"
-            name="male"
-            type="radio"
-          />
-          <label for="male">Masculino</label>
-          <input
-            class="mb-2 ms-2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            v-model="gender"
-            id="female"
-            value="femenino"
-            name="female"
-            type="radio"
-          />
-          <label for="female">Femenino</label>
-        </div>
-        <label v-if="error.gender" class="text-red-600 text-sm mb-2">
-          {{ error.gender }}
-        </label>
         <button
           type="submit"
           :disabled="isLoading"
