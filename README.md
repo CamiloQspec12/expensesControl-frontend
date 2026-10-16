@@ -2,10 +2,13 @@
 
 A full-stack personal finance app to track income and expenses, organise spending by category and spot small recurring "hormiga" (ant) expenses that add up over time.
 
-**Live demo:** <expenses-control-frontend-sigma.vercel.app>
-**Backend repo:** <https://github.com/CamiloQspec12/expensesControl-backend>
+**Live demo:** [expenses-control-phi.vercel.app](https://expenses-control-phi.vercel.app)
 
-![Dashboard](./screenshots/dashboard.png)
+**Demo account:**` testuser@gmail.com` / `1234567`
+
+**Backend repo:** [expensesControl-backend](https://github.com/CamiloQspec12/expensesControl-backend)
+
+![Login](./screenshots/Login.png)
 
 ## Features
 
@@ -20,7 +23,7 @@ A full-stack personal finance app to track income and expenses, organise spendin
 
 **Frontend:** Vue 3 (Composition API), Pinia, Vue Router, Axios, Tailwind CSS, Vite
 **Backend:** Node.js, Express, Prisma, PostgreSQL, JWT, bcrypt
-**Deployment:** Vercel (frontend), Railway (backend and database)
+**Deployment:** Vercel (frontend), Render (backend), Neon (PostgreSQL)
 
 ## Screenshots
 
@@ -32,29 +35,32 @@ A full-stack personal finance app to track income and expenses, organise spendin
 
 ### Prerequisites
 
-- Node.js <version>
+- Node.js v22+
 - PostgreSQL running locally
 
 ### Backend
 
 ```bash
-git clone <backend-repo-url>
-cd <backend-folder>
+git clone https://github.com/CamiloQspec12/expensesControl-backend
+cd expensesControl-backend
 npm install
-cp .env.example .env
-npx prisma migrate dev
+cp .env.example .env     # then edit .env with your Postgres credentials and a JWT secret
+npx prisma migrate dev   # creates the database (if missing) and its tables
 npm run dev
 ```
 
 ### Frontend
 
 ```bash
-git clone <frontend-repo-url>
-cd <frontend-folder>
+git clone https://github.com/CamiloQspec12/expensesControl-frontend
+cd expensesControl-frontend
 npm install
-cp .env.example .env
 npm run dev
+
 ```
+
+<!-- By default the frontend calls `http://localhost:3000/api`. To point it at another backend,
+copy `.env.example` to `.env` and change `VITE_API_URL`. -->
 
 ## Environment variables
 
@@ -75,11 +81,11 @@ npm run dev
 
 ## What I learned
 
-- Deploying a full-stack app: Vercel + Railway, CORS between environments, environment-specific database SSL
-- Handling errors across layers: validation, 400/401/500 responses and an Axios interceptor for expired sessions
-- Building a responsive layout with Tailwind's mobile-first approach
+- Deploying a full-stack app: Vercel + Render + Neon, CORS between environments, environment-specific database SSL
+- Migrating hosting when a free trial expired: moving the database with Prisma migrations and repointing the frontend
 
 ## Next steps
 
-- <e.g. automated tests>
-- <e.g. charts on the dashboard>
+- Edit and Delete records
+- Charts on the dashboard
+- Filters on expenses and on the dashboard
