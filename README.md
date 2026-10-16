@@ -8,7 +8,7 @@ A full-stack personal finance app to track income and expenses, organise spendin
 
 **Backend repo:** [expensesControl-backend](https://github.com/CamiloQspec12/expensesControl-backend)
 
-![Login](./screenshots/Login.png)
+![Login](./screenshots/login.png)
 
 ## Features
 
