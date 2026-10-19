@@ -26,5 +26,10 @@ export const useExpensesStore = defineStore('expenses', () => {
       throw e
     }
   }
-  return { createExpense, fetchExpenses, expenses }
+
+  function reset() {
+    expenses.value = []
+  }
+
+  return { createExpense, fetchExpenses, expenses, reset }
 })

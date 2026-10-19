@@ -34,5 +34,9 @@ export const useIncomesStore = defineStore('incomes', () => {
     }).format(value)
   }
 
-  return { fetchIncomes, createIncomes, incomes, formatingCurrency }
+  function reset() {
+    incomes.value = []
+  }
+
+  return { fetchIncomes, createIncomes, incomes, formatingCurrency, reset }
 })

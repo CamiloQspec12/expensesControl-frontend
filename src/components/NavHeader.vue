@@ -1,9 +1,18 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { Menu, X } from 'lucide-vue-next'
+import { useRoute, useRouter } from 'vue-router'
+import { Menu, X, LogOut } from 'lucide-vue-next'
+import { useAuthStore } from '@/stores/auth'
+import { useExpensesStore } from '@/stores/expenses'
+import { useIncomesStore } from '@/stores/incomes'
+import { useCategoriesStore } from '@/stores/categories'
 
 const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+const expensesStore = useExpensesStore()
+const incomesStore = useIncomesStore()
+const categoriesStore = useCategoriesStore()
 
 const reactiveRoute = computed(() => {
   console.log(route.path)
@@ -28,8 +37,17 @@ const routesNav = [
     name: 'Categories',
   },
 ]
-
 const isOpen = ref(false)
+
+function handleLogout() {
+  authStore.logout()
+  expensesStore.reset()
+  incomesStore.reset()
+  categoriesStore.reset()
+
+  isOpen.value = false
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -57,7 +75,14 @@ const isOpen = ref(false)
       <X v-if="isOpen" :size="28" :stroke-width="1.75" />
       <Menu v-else :size="28" :stroke-width="1.75" />
     </button>
-
+    <button
+      type="button"
+      class="ml-2 md:flex hidden items-center gap-2 rounded-lg border border-gray-300 px-4 py-1 font-medium text-gray-700 hover:bg-gray-100"
+      @click="handleLogout"
+    >
+      <LogOut :size="18" />
+      Salir
+    </button>
     <nav
       v-if="isOpen"
       class="absolute top-full left-0 right-0 z-10 md:hidden bg-white border-b border-gray-200 shadow-md flex flex-col gap-1 p-3"
@@ -71,6 +96,14 @@ const isOpen = ref(false)
       >
         {{ route.name }}
       </router-link>
+      <button
+        type="button"
+        class="flex items-center gap-2 rounded-lg px-4 py-2 text-left text-red-600 hover:bg-red-50"
+        @click="handleLogout"
+      >
+        <LogOut :size="18" />
+        Cerrar sesión
+      </button>
     </nav>
   </header>
 </template>

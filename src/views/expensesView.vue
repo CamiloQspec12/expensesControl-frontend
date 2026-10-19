@@ -9,23 +9,23 @@ const type = ref('')
 const value = ref(0.0)
 const category = ref(0)
 const error = ref({})
+const loadError = ref('')
+const isLoadingList = ref(false)
 const isLoading = ref(false)
 
-//Create instancies
 const expensesStore = useExpensesStore()
 const categoriesStore = useCategoriesStore()
 const incomesStore = useIncomesStore()
-// Create Instancies
 
 onMounted(async () => {
-  isLoading.value = true
+  isLoadingList.value = true
   try {
     await expensesStore.fetchExpenses()
     await categoriesStore.fetchCategories()
   } catch (e) {
-    console.error(e)
+    loadError.value = 'No se pudieron cargar los datos, intentalo de nuevo'
   } finally {
-    isLoading.value = false
+    isLoadingList.value = false
   }
 })
 
@@ -52,6 +52,7 @@ function validate() {
 async function handleCreate() {
   if (!validate()) return
 
+  isSubmitting.value = true
   isLoading.value = true
   try {
     await expensesStore.createExpense(type.value, value.value, category.value)
@@ -68,7 +69,7 @@ async function handleCreate() {
       error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
     }
   } finally {
-    isLoading.value = false
+    isSubmitting.value = false
   }
 }
 </script>
@@ -117,7 +118,7 @@ async function handleCreate() {
           <button
             type="submit pointer"
             class="px-4 flex items-center gap-2 leading-none justify-center py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="isLoading"
+            :disabled="isSubmitting"
           >
             {{ isLoading ? 'Creando' : 'Crear' }}
             <Plus class="w-4 h-4 shrink-0 translate-y-px" :stroke-width="2.5" />
@@ -126,10 +127,17 @@ async function handleCreate() {
       </div>
       <div class="bg-white rounded-lg shadow-sm flex flex-col min-h-0 p-4 md:p-6 w-full md:w-2/3">
         <p class="text-lg font-medium text-gray-900 mb-3">Ultimos gastos</p>
-        <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
-          Cargando....
+        <p v-if="isLoading" class="text-gray-900 mt-4 font-bold text-center">Cargando....</p>
+        <p v-else-if="loadError" class="text-gray-900 mt-4 font-bold text-center">
+          {{ loadError }}
         </p>
-        <ul class="overflow-y-auto flex-1" v-else>
+        <p
+          v-else-if="expensesStore.expenses.length === 0"
+          class="text-gray-900 mt-4 font-bold text-center"
+        >
+          No tienes gastos creados...
+        </p>
+        <ul v-else class="overflow-y-auto flex-1">
           <li
             v-for="expenses in expensesStore.expenses"
             :key="expenses.id"

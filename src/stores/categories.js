@@ -27,5 +27,9 @@ export const useCategoriesStore = defineStore('categories', () => {
     }
   }
 
-  return { fetchCategories, categories, createCategories }
+  function reset() {
+    categories.value = []
+  }
+
+  return { fetchCategories, categories, createCategories, reset }
 })

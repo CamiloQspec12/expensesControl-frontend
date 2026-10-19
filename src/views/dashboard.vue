@@ -1,27 +1,23 @@
 <script setup>
 import { useExpensesStore } from '@/stores/expenses'
 import { useIncomesStore } from '@/stores/incomes'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 
-const expensesStores = useExpensesStore()
+const expensesStore = useExpensesStore()
 const incomesStore = useIncomesStore()
 onMounted(() => {
-  expensesStores.fetchExpenses()
+  expensesStore.fetchExpenses()
   incomesStore.fetchIncomes()
 })
 
-const initialValue = ref({})
 
 const recentExpenses = computed(() => {
-  return expensesStores.expenses.slice(0, 5)
+  return expensesStore.expenses.slice(0, 5)
 })
 
-// const recentIncomes = computed(() => {
-//   return incomesStore.incomes.slice(0, 3)
-// })
 
 const totalExpenses = computed(() => {
-  return expensesStores.expenses.reduce((acc, value) => acc + Number(value.value), 0)
+  return expensesStore.expenses.reduce((acc, value) => acc + Number(value.value), 0)
 })
 
 const totalIncome = computed(() => {
@@ -33,11 +29,13 @@ const balance = computed(() => {
 })
 
 const mostUsedCategories = computed(() => {
-  const counts = expensesStores.expenses.reduce((acc, value) => {
-    const name = value.category.name
+  const counts = expensesStore.expenses.reduce((acc, value) => {
+    const name = value.category?.name || 'Sin categoria'
+
     acc[name] = (acc[name] || 0) + 1
+
     return acc
-  }, initialValue.value)
+  }, {})
   return Object.entries(counts).sort((a, b) => b[1] - a[1])
 })
 
