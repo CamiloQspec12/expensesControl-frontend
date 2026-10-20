@@ -114,7 +114,7 @@ async function handleIncome() {
             :disabled="isSubmitting"
             class="px-4 flex items-center gap-2 leading-none justify-center py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ isLoadingList ? ' Creando ' : 'Crear' }}
+            {{ isSubmitting ? ' Creando ' : 'Crear' }}
             <Plus class="w-4 h-4 shrink-0 translate-y-px" :stroke-width="2.5" />
           </button>
         </form>
