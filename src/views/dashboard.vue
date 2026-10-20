@@ -1,13 +1,24 @@
 <script setup>
 import { useExpensesStore } from '@/stores/expenses'
 import { useIncomesStore } from '@/stores/incomes'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
+
+
+const loadError = ref('')
+const isLoadingData = ref(false)
 const expensesStore = useExpensesStore()
 const incomesStore = useIncomesStore()
-onMounted(() => {
-  expensesStore.fetchExpenses()
-  incomesStore.fetchIncomes()
+onMounted( async () => {
+  try{
+    isLoadingData.value = true
+    await expensesStore.fetchExpenses()
+    await incomesStore.fetchIncomes()
+  } catch (e) {
+    loadError.value = 'No se pudieron cargar los datos, intentalo de nuevo'
+  } finally {
+    isLoadingData.value = false
+  }
 })
 
 
@@ -70,7 +81,10 @@ function formatDate(dateString) {
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div class="bg-white rounded-lg shadow-sm p-4 lg:col-span-2">
         <h2 class="text-lg font-medium text-gray-900 mb-3">Últimos gastos</h2>
-        <ul>
+        <p v-if="isLoadingData" class="text-gray-900 mt-4 font-bold text-center">Cargando....</p>
+        <p v-else-if="loadError" class="text-gray-900 mt-4 font-bold text-center">{{ loadError }}</p>
+        <p v-else-if="recentExpenses.length === 0" class="text-gray-900 mt-4 font-bold text-center"> No tienes gastos creados... </p>
+        <ul v-else>
           <li
             v-for="ex in recentExpenses"
             :key="ex.id"
@@ -90,6 +104,9 @@ function formatDate(dateString) {
       </div>
       <div class="bg-white rounded-lg shadow-sm p-4">
         <h2 class="text-lg font-medium text-gray-900 mb-3">Categorías más utilizadas</h2>
+        <p v-if="isLoadingData" class="text-gray-900 mt-4 font-bold text-center">Cargando....</p>
+        <p v-else-if="loadError" class="text-gray-900 mt-4 font-bold text-center">{{ loadError }}</p>
+        <p v-else-if="mostUsedCategories.length === 0" class="text-gray-900 mt-4 font-bold text-center"> No tienes categorias creadas... </p>
         <ul>
           <li
             v-for="[name, count] in mostUsedCategories"

@@ -63,7 +63,8 @@ function handleLogout() {
         v-for="(route, idx) in routesNav"
         :key="idx"
         :to="route.path"
-        :class="`${idx === 0 ? 'ms-auto' : 'ms-1'} hidden md:flex px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium`"
+        active-class="bg-blue-600 text-white hover:bg-blue-700"
+        :class="`${idx === 0 ? 'ms-auto' : 'ms-1'} hidden md:flex rounded-lg px-4 py-1 font-medium text-gray-600 hover:bg-gray-100`"
       >
         {{ route.name }}
       </router-link>

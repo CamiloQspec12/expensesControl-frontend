@@ -11,7 +11,7 @@ const category = ref(0)
 const error = ref({})
 const loadError = ref('')
 const isLoadingList = ref(false)
-const isLoading = ref(false)
+const isSubmitting = ref(false)
 
 const expensesStore = useExpensesStore()
 const categoriesStore = useCategoriesStore()
@@ -53,7 +53,6 @@ async function handleCreate() {
   if (!validate()) return
 
   isSubmitting.value = true
-  isLoading.value = true
   try {
     await expensesStore.createExpense(type.value, value.value, category.value)
     await expensesStore.fetchExpenses()
@@ -120,14 +119,14 @@ async function handleCreate() {
             class="px-4 flex items-center gap-2 leading-none justify-center py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             :disabled="isSubmitting"
           >
-            {{ isLoading ? 'Creando' : 'Crear' }}
+            {{ isSubmitting ? 'Creando' : 'Crear' }}
             <Plus class="w-4 h-4 shrink-0 translate-y-px" :stroke-width="2.5" />
           </button>
         </form>
       </div>
       <div class="bg-white rounded-lg shadow-sm flex flex-col min-h-0 p-4 md:p-6 w-full md:w-2/3">
         <p class="text-lg font-medium text-gray-900 mb-3">Ultimos gastos</p>
-        <p v-if="isLoading" class="text-gray-900 mt-4 font-bold text-center">Cargando....</p>
+        <p v-if="isLoadingList" class="text-gray-900 mt-4 font-bold text-center">Cargando....</p>
         <p v-else-if="loadError" class="text-gray-900 mt-4 font-bold text-center">
           {{ loadError }}
         </p>

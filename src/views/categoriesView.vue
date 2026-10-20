@@ -5,17 +5,20 @@ import { onMounted, ref } from 'vue'
 const name = ref('')
 const category = ref('0')
 const error = ref({})
-const isLoading = ref(false)
+const isLoadingList = ref(false)
+const isSubmitting = ref(false)
+const loadError = ref('')
+
 const categoriesStore = useCategoriesStore()
 
 onMounted(async () => {
-  isLoading.value = true
+  isLoadingList.value = true
   try {
     await categoriesStore.fetchCategories()
   } catch (e) {
-    console.error(e)
+    loadError.value = 'No se pudieron cargar los datos, intentalo de nuevo'
   } finally {
-    isLoading.value = false
+    isLoadingList.value = false
   }
 })
 
@@ -37,7 +40,7 @@ function validate() {
 
 async function handleCategory() {
   if (!validate()) return
-  isLoading.value = true
+  isSubmitting.value = true
   try {
     await categoriesStore.createCategories(name.value, category.value)
     name.value = ''
@@ -51,7 +54,7 @@ async function handleCategory() {
       error.value.general = 'Hay un problema en el servidor, intentalo mas tarde'
     }
   } finally {
-    isLoading.value = false
+    isSubmitting.value = false
   }
 }
 </script>
@@ -92,19 +95,28 @@ async function handleCategory() {
           </label>
           <button
             type="submit"
-            :disabled="isLoading"
+            :disabled="isSubmitting"
             class="px-4 py-1 cursor-pointer rounded-lg transition-colors bg-blue-600 hover:bg-blue-700 text-white font-medium"
           >
-            {{ isLoading ? 'Creando' : 'Crear' }}
+            {{ isSubmitting ? 'Creando' : 'Crear' }}
           </button>
         </form>
       </div>
       <div class="bg-white rounded-lg shadow-sm flex flex-col min-h-0 p-4 md:p-6 w-full md:w-2/3">
         <p class="text-lg font-medium text-gray-900 mb-3">Categorias creadas</p>
-        <p v-if="isLoading" class="text-gray-900 mt-4 font-large font-bold text-center">
+        <p v-if="isLoadingList" class="text-gray-900 mt-4 font-large font-bold text-center">
           Cargando...
         </p>
-        <ul class="overflow-y-auto flex-1" v-else>
+        <p v-else-if="loadError" class="text-gray-900 mt-4 font-large font-bold text-center">
+          {{ loadError }}
+        </p>
+        <p
+          v-else-if="categoriesStore.categories.length === 0"
+          class="text-gray-900 mt-4 font-large font-bold text-center"
+        >
+          No tienes categorias creadas....
+        </p>
+        <ul v-else class="overflow-y-auto flex-1">
           <li
             v-for="cat in categoriesStore.categories"
             :key="cat.id"
